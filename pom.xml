@@ -13,7 +13,7 @@
         <flyway.version>3.2.1</flyway.version>
         <mysql.driver.version>5.1.13</mysql.driver.version>
         <database.driver>com.mysql.jdbc.Driver</database.driver>
-        <database.url>jdbc:mysql://localhost:3306/customer_dev?autoreconnect=true</database.url>
+        <database.url>jdbc:mysql://localhost:3306/mescoursesdb?autoreconnect=true</database.url>
         <database.username>admin</database.username>
         <database.password>p@ssw0rd</database.password>
     </properties>
@@ -44,10 +44,10 @@
                     <user>${database.username}</user>
                     <password>${database.password}</password>
                     <schemas>
-                        <schema>customer_dev</schema>
+                        <schema>mescoursesdb</schema>
                     </schemas>
                     <locations>
-                        <location>sql/migrations</location>
+                        <location>classpath:sql/migrations</location>
                     </locations>
                     <encoding>ISO-8859-1</encoding>
                     <cleanOnValidationError>true</cleanOnValidationError>

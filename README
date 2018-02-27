@@ -1,0 +1,2 @@
+create database mescoursesdb;
+grant all on mescoursesdb.* to admin@localhost identified by 'p@ssw0rd';
