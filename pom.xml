@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.sare.mescourses.db</groupId>
+    <artifactId>mescourses-db</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+
+    <properties>
+        <flyway.version>3.2.1</flyway.version>
+        <mysql.driver.version>5.1.13</mysql.driver.version>
+        <database.driver>com.mysql.jdbc.Driver</database.driver>
+        <database.url>jdbc:mysql://localhost:3306/customer_dev?autoreconnect=true</database.url>
+        <database.username>admin</database.username>
+        <database.password>p@ssw0rd</database.password>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.driver.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway.version}</version>
+                <configuration>
+                    <driver>${database.driver}</driver>
+                    <url>${database.url}</url>
+                    <user>${database.username}</user>
+                    <password>${database.password}</password>
+                    <schemas>
+                        <schema>customer_dev</schema>
+                    </schemas>
+                    <locations>
+                        <location>sql/migrations</location>
+                    </locations>
+                    <encoding>ISO-8859-1</encoding>
+                    <cleanOnValidationError>true</cleanOnValidationError>
+                    <placeholders>
+                        <email_type.primary>Primary</email_type.primary>
+                        <email_type.work>Work</email_type.work>
+                        <phone_type.home>Home</phone_type.home>
+                    </placeholders>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flyway database migration</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>baseline</goal>
+                            <goal>migrate</goal>
+                            <goal>info</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+    <profile>
+        <id>h2-test</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <flyway.driver>org.h2.Driver</flyway.driver>
+                            <flyway.url>jdbc:h2:nio:${project.build.directory}/db/flywaytest.db</flyway.url>
+                            <flyway.user>h2_test</flyway.user>
+                            <flyway.password>h2_test</flyway.password>
+                            <flyway.locations>sampletest3</flyway.locations>
+                        </systemPropertyVariables>
+                        <threadCount>1</threadCount>
+                    </configuration>
+                    <goals>
+                        <goal>test</goal>
+                    </goals>
+                    <executions>
+                    </executions>
+                </plugin>
+            </plugins>
+        </build>
+    </profile>
+    </profiles>
+</project>
